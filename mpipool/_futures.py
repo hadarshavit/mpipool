@@ -164,7 +164,8 @@ class MPIExecutor(concurrent.futures.Executor):
         # The master continues initialization here
         self._workers = set(range(self._comm.size))
         self._idle_workers = self._workers.copy()
-
+        self._size = self._comm.Get_size()
+        
         if self._size == 0:
             raise MPIProcessError("MPIExecutor requires at least 2 MPI processes.")
 
