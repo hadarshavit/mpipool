@@ -149,7 +149,7 @@ class MPIExecutor(concurrent.futures.Executor):
 
         atexit.register(lambda: MPIExecutor.shutdown(self))
 
-        if True:
+        if not self.is_main():
             # The workers enter their workloop here.
             self._work()
             # Workers who've been told to quit work resume code here and return out of the
@@ -159,8 +159,7 @@ class MPIExecutor(concurrent.futures.Executor):
                 self._logger.info("Worker exiting (rejoin=False).")
                 exit()
             self._logger.info("Worker rejoining normal code execution.")
-            if not self.is_main():
-                return
+            return
 
         # The master continues initialization here
         self._workers = set(range(self._comm.size))
