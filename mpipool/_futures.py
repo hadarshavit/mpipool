@@ -173,6 +173,9 @@ class MPIExecutor(concurrent.futures.Executor):
         self._logger.info("Starting work loop")
         while True:
             try:
+                if self.is_main() and len(self._queue) == 0:
+                    self._logger.info("No jobs in queue, idling.")
+                    break
                 task: Task = self._comm.recv(source=self._main)
                 if task is None:
                     self._logger.info("Terminating work loop.")
